@@ -9,11 +9,11 @@ title: AES加密笔记
 ## 加密流程
 
 ![img](https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTcwMjE5MDgyOTA5Njg4?x-oss-process=image/format,png)
-
+<!-- more -->
 ## 使用
 
 利用`crypto-js`进行AES加密操作
-<!-- more -->
+
 * 安装
 
   ```shell

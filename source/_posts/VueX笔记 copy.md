@@ -1,5 +1,5 @@
 ---
-title: Vuex笔记
+title: Vuex笔记2
 tags: [Vue]
 ---
 
