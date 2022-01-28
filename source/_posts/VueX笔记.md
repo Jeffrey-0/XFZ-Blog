@@ -1,5 +1,6 @@
 ---
 title: Vuex笔记
+date: 2022-01-29
 tags: [Vue]
 ---
 
