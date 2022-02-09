@@ -1,7 +1,9 @@
 ---
-title: ES6展开运算符（...)
-tags: [ES6]
+title: 展开运算符...
+date: 2021-11-7
+categories: [JavaScript]
 ---
+
 
 ## 合并数组
 
@@ -19,7 +21,7 @@ let person2 = {age: 19, sex: '男'}
 let person3 = {...person1, ...person2, name: 'jeffrey'}
 console.log(person3) // {name: "jeffrey", age: 19, son: {…}, sex: "男"}
 ```
-<!-- more -->
+
 ## 不定个数传参
 
 ```js

@@ -1,8 +1,10 @@
 ---
-title: Vuex笔记
-date: 2022-01-29
+title: VueX基础
+date: 2021-05-29
 tags: [Vue]
+categories: [框架]
 ---
+
 
 > 学习视频：[Vuex从入门到实战](https://www.bilibili.com/video/BV1h7411N7bg?p=1)
 
@@ -17,7 +19,7 @@ Vuex是实现组件全局状态（数据）管理的一种机制，可以方便�
 * 能够在vuex中集中管理共享的数据，易于开发和后期维护
 * 能够高效地实现组件之间的数据共享，提高开发效率
 * 存储在vuex中的数据都是响应式的，能够实时保持数据与页面的同步
-<!-- more -->
+
 ## 基本使用
 
 1. 安装vuex依赖包
@@ -54,7 +56,7 @@ Vuex是实现组件全局状态（数据）管理的一种机制，可以方便�
        store
    })
    ```
-
+<!-- more -->
 ## 核心概念
 
 ### State
@@ -70,19 +72,19 @@ const store = new Vuex.Store({
 
 访问方式
 
-* ```js
-  this.$store.state.全局数据名称
-  ```
+```js
+this.$store.state.全局数据名称
+```
 
-* ```js
-  // 1.从vuex中按需导入mapState函数
-  import { mapState } from 'vuex'
-  
-  // 2.将全局数据，映射为当前组件的计算属性
-  computed: {
-      ...mapState(['count'])
-  }
-  ```
+```js
+// 1.从vuex中按需导入mapState函数
+import { mapState } from 'vuex'
+
+// 2.将全局数据，映射为当前组件的计算属性
+computed: {
+    ...mapState(['count'])
+}
+```
 
 ### Mutation（commit触发）
 
@@ -107,24 +109,24 @@ const store =  new Vuex.Store({
 
 触发mutation方法
 
-* ```js
-  // 利用commit进行触发
-  methods: {
-      addN () {
-          this.$store.commit('addN', 5)
-      }
-  }
-  ```
+```js
+// 利用commit进行触发
+methods: {
+    addN () {
+        this.$store.commit('addN', 5)
+    }
+}
+```
 
-* ```js
-  // 1.从vuex中按需导入 mapMutations 函数
-  import { mapMutations } from 'vuex'
-  
-  // 2. 将指定的mutations函数，映射为当前组件的methods函数
-  methods: {
-      ...mapMutations(['add', 'addN'])
-  }
-  ```
+```js
+// 1.从vuex中按需导入 mapMutations 函数
+import { mapMutations } from 'vuex'
+
+// 2. 将指定的mutations函数，映射为当前组件的methods函数
+methods: {
+    ...mapMutations(['add', 'addN'])
+}
+```
 
 ### Action（dispatch触发)
 
@@ -150,24 +152,24 @@ const store =  new Vuex.Store({
 
 触发方法
 
-* ```js
-  // 利用dispatch触发
-  methods: {
-      handle () {
-          this.$store.dispatch('addAsync')
-      }
-  }
-  ```
+```js
+// 利用dispatch触发
+methods: {
+    handle () {
+        this.$store.dispatch('addAsync')
+    }
+}
+```
 
-* ```js
-  // 1.从vuex中按需导入 mapMutations 函数
-  import { mapActions } from 'vuex'
-  
-  // 2. 将指定的actions函数，映射为当前组件的methods函数
-  methods: {
-      ...mapActions(['addAsync'])
-  }
-  ```
+```js
+// 1.从vuex中按需导入 mapMutations 函数
+import { mapActions } from 'vuex'
+
+// 2. 将指定的actions函数，映射为当前组件的methods函数
+methods: {
+    ...mapActions(['addAsync'])
+}
+```
 
 ### Getter
 
@@ -188,19 +190,19 @@ const store =  new Vuex.Store({
 
 调用方法
 
-* ```js
-  this.$store.getters.showNum
-  ```
+```js
+this.$store.getters.showNum
+```
 
-* ```js
-  // 1.从vuex中按需导入mapState函数
-  import { mapGetters } from 'vuex'
-  
-  // 2.将全局数据，映射为当前组件的计算属性
-  computed: {
-      ...mapGetters(['showNum'])
-  }
-  ```
+```js
+// 1.从vuex中按需导入mapState函数
+import { mapGetters } from 'vuex'
+
+// 2.将全局数据，映射为当前组件的计算属性
+computed: {
+    ...mapGetters(['showNum'])
+}
+```
 
 ### Module
 
@@ -257,28 +259,28 @@ const store =  new Vuex.Store({
 
 调用方法(namespaced为true的情况)：
 
-* ```js
-  // state调用方法
-  this.$store.state.moduleA.number
-  // getters调用方法
-  this.$store.getters["moduleA/showNum"]
-  // mutations调用方法
-  this.$store.commit('moduleA/addOne')
-  // actions调用方法
-  this.$store.dispatch('moduleA/addRoot')
-  ```
+```js
+// state调用方法
+this.$store.state.moduleA.number
+// getters调用方法
+this.$store.getters["moduleA/showNum"]
+// mutations调用方法
+this.$store.commit('moduleA/addOne')
+// actions调用方法
+this.$store.dispatch('moduleA/addRoot')
+```
 
-* ```js
-  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-  methods: {
-      ...mapMutations('moduleA', ['addOne']),
-      ...mapActions('moduleA', ['addRoot']),
-  }
-  computed: {
-      ...mapState('moduleA', {
-        number: state => state.number
-      }),
-      ...mapGetters('moduleA', ['showNum'])
-  }
-  ```
+```js
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+methods: {
+    ...mapMutations('moduleA', ['addOne']),
+    ...mapActions('moduleA', ['addRoot']),
+}
+computed: {
+    ...mapState('moduleA', {
+      number: state => state.number
+    }),
+    ...mapGetters('moduleA', ['showNum'])
+}
+```
 

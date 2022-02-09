@@ -1,5 +1,8 @@
 ---
-title: AES加密笔记
+title: AES加密
+date: 2021-09-10
+tags: [加密]
+categories: [安全]
 ---
 
 ## 简介
@@ -8,8 +11,8 @@ title: AES加密笔记
 
 ## 加密流程
 
-![img](https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTcwMjE5MDgyOTA5Njg4?x-oss-process=image/format,png)
-<!-- more -->
+![img](/images/AES加密.png)
+
 ## 使用
 
 利用`crypto-js`进行AES加密操作
@@ -28,7 +31,7 @@ title: AES加密笔记
   //把AES加密vue原型里
   Vue.prototype.$cryptoJS = cryptoJS;
   ```
-
+<!-- more -->
 * 使用
 
   ```js
