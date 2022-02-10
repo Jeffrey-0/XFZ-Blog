@@ -60,7 +60,6 @@ function handleSuccess(stream) {
     localConnection.setLocalDescription(offer).then(sendOffer)
   })
 }
-复制代码
 ```
 
 同样的，接收方也需要新建一个`RTCPeerConnection`对象
@@ -86,7 +85,7 @@ function handleSuccess(stream) {
       }
   }
 }
-复制代码
+
 ```
 
 当应答方收到发起方发送的`offer`之后，调用`setRemoteDescription`设置`RTCPeerConnection`对象的`remoteDescription`属性，设置成功之后调用`createAnswer`方法，创建`answer`成功之后将其设置为`localDescription`，然后把`answer`发送给服务器
@@ -98,7 +97,7 @@ remoteConnection.setRemoteDescription(desc).then(function() {
         remoteConnection.setLocalDescription(answer).then(sendAnswer)
     })
 })
-复制代码
+
 ```
 
 当发起方收到应答方发送的`answer`之后，将其设置为`remoteDescription`，至此`WebRTC`连接完成。
@@ -106,7 +105,7 @@ remoteConnection.setRemoteDescription(desc).then(function() {
 ```
 let desc=new RTCSessionDescription(sdp)
 localConnection.setRemoteDescription(desc).then(()=>{console.log('Peer Connection Success')})
-复制代码
+
 ```
 
 此时虽然`WebRTC`连接已经完成，但是通信双方还不能直接通信，因为发送的`ICE`还没有处理，通信双方还没有确定最优的连接方式。
@@ -115,14 +114,14 @@ localConnection.setRemoteDescription(desc).then(()=>{console.log('Peer Connectio
 
 ```
 remoteConnection.addIceCandidate(new RTCIceCandidate(ice))
-复制代码
+
 ```
 
 发起方收到应答方发送的`ICE`数据时，同样调用`RTCPeerConnection`对象的`addIceCandidate`方法。
 
 ```
 localConnection.addIceCandidate(new RTCIceCandidate(ice))
-复制代码
+
 ```
 
 至此，一个最简单的`WebRTC`连接已经建立完成。
@@ -134,7 +133,7 @@ localConnection.addIceCandidate(new RTCIceCandidate(ice))
 ```
 var peerConnection = new RTCPeerConnection();
 var dataChannel = peerConnection.createDataChannel("label",dataChannelOptions);
-复制代码
+
 ```
 
 `WebRTC`会处理好所有的事情，包括浏览器内部层。浏览器通过一系列的事件来通知应用程序，当前数据通道所处的状态。`ondatachannel`事件会通知`RTCPeerConnection`对象，`RTCDataChannel`对象本身在开启、关闭、发生错误或者接收到消息时会触发对应的事件。
@@ -157,7 +156,7 @@ dataChannel.onopen = function (error){
 dataChannel.onclose = function (error){
     console.log('data channel closed')
 }
-复制代码
+
 ```
 
 数据通道`datachannel`建立的过程略微不同于建立视频流或音频流双向连接，`offer、answer、ice`处理完毕之后，由一方发起请求即可。
@@ -168,7 +167,7 @@ localConnection = new RTCPeerConnection();
 sendChannel = localConnection.createDataChannel("sendChannel");
 sendChannel.onopen = handleSendChannelStatusChange;
 sendChannel.onclose = handleSendChannelStatusChange;
-复制代码
+
 ```
 
 接收方此时并不需要再次调用`createDataChannel`方法，只需要监听`RTCPeerConnection`实例对象上的`ondatachannel`事件就可以在回调中拿到发送方的请求，数据通道就建立起来了。
@@ -183,7 +182,7 @@ function receiveChannelCallback(event) {
     receiveChannel.onopen = handleReceiveChannelStatusChange;
     receiveChannel.onclose = handleReceiveChannelStatusChange;
   }
-复制代码
+
 ```
 
 `dataChannelOptions`传入的配置项是可选的，并且是一个普通的`JavaScript`对象，这些配置项可以使应用在`UDP`或者`TCP`的优势之间进行变化。
