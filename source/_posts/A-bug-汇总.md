@@ -6,6 +6,22 @@ abstract: 这是一篇加密文章，请输入密码再查看!
 message:  输入密码
 ---
 
+
+
+模板：
+
+**2022-**
+
+***
+
+> 
+
+
+
+***
+
+
+
 **2022-2-09**
 
 ***
@@ -25,7 +41,7 @@ chmod -R 777 文件名
 1. 查看端口进程
 
    ```shell
-   lsof -i  端口号
+   lsof -i:端口号
    ```
 
 2. 强制杀进程
@@ -99,5 +115,101 @@ chmod -R 777 文件名
    message:  输入框提示
    ```
 
+
+***
+
+
+
+**2022-2-15**
+
+***
+
+> vue中混合机制mixin用法
+
+作用：多个组件可以共享数据和方法，在使用mixin的组件中引入后，mixin中的方法和属性也就并入到该组件中，可以直接使用。钩子函数会两个都被调用，mixin中的钩子首先执行。
+
+1. 定义一个js文件(mixin.js)
+
+   ```js
+   export default {
+    data() {
+     return {
+      name: 'mixin'
+     }
+    },
+    created() {
+     console.log('mixin...', this.name);
+    },
+    mounted() {},
+    methods: {}
+   }
+   ```
+
+2. 在vue文件中使用mixin
+
+   ```js
+   import mixin from '@/mixin'; // 引入mixin文件
+   export default {
+    mixins: [mixin]
+   }
+   ```
+
+***
+
+
+
+**2022-2-16**
+
+***
+
+> git查看所有远程分支
+
+```shell
+git branch -a
+```
+
+***
+
+> 优化vue项目的首屏加载速度，使用打包压缩插件
+
+使用compression-webpack-plugin将打包文件压缩成.gz文件，然后通过nginx的配置，让浏览器直接解析.gz文件。
+
+1. 安装插件,高版本可能会出现报错
+
+   ```shell
+   npm i compression-webpack-plugin@5.0.0
+   ```
+
+2. 在vue.config.js中配置插件
+
+   ```js
+   const compressionWebpackPlugin = require('compression-webpack-plugin')
    
+   module.exports = {
+     configureWebpack: {
+       // 添加插件
+       plugins: [
+         new compressionWebpackPlugin()
+       ]
+     }
+   }
+   ```
+
+3. nginx的服务端中开启gzip压缩配置
+
+   ```json
+   server {
+       gzip on;
+       gzip_static on;
+       gzip_min_length 1k;
+       gzip_buffers 4 32k;
+       gzip_http_version 1.1;
+       gzip_comp_level 2;
+       gzip_types text/plain application/x-javascript text/css application/xml;
+       gzip_vary on;
+       gzip_disable "MSIE [1-6].";
+   }
+   ```
+
+注意：compressionWebpackPlugin()不要配置deleteOriginalAssets: true，否则会出现白屏。
 
