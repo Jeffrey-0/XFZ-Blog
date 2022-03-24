@@ -213,3 +213,38 @@ git branch -a
 
 注意：compressionWebpackPlugin()不要配置deleteOriginalAssets: true，否则会出现白屏。
 
+***
+
+
+
+**2022-2-17**
+
+***
+
+> git push 的时候报fatal: unable to access 'https://...': Failed to connect to github.com port 443: Timed out
+
+将https改用git
+
+```shell
+git remote rm origin
+git remote add origin git@github.com:XXX
+```
+
+***
+
+
+
+**2022-2-23**
+
+***
+
+> js高阶函数reduce用法
+
+记得在函数后面添加一个初始值参数
+
+```js
+arr.reduce((total, item) => total + item, 0)
+```
+
+***
+

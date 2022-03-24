@@ -80,7 +80,7 @@ const VDOM = (
 * 标签中混入JS表达式要用{}
 * 样式的类名指定不要用class，要用className
 * 内联样式，要用`style={{key:value}}`的形式去写
-* 只能有一个跟标签
+* 只能有一个根标签
 * 标签必须闭合
 * 标签首字母
   * 小写字母开头，则将该标签转为html中的同名元素，若html中无该标签对应的同名元素，则报错。
@@ -368,13 +368,13 @@ class Demo extends React.Component{
 1. 全局安装脚手架
 
    ```shell
-   npm i -g create-react-app
+   yarn add -g create-react-app
    ```
 
 2. 切换到想创建项目的目录，使用命令
 
    ```shell
-   create-react-app hello-react
+   npx create-react-app hello-react
    ```
 
 3. 进入项目文件夹
@@ -511,11 +511,317 @@ class Demo extends React.Component{
 * 专门用来实现一个SPA应用
 * 基于react的项目基本都会用到此库
 
+### 路由的基本使用
+
+1. 安装路由插件
+
+   ```shell
+   yarn add react-router-dom@5
+   ```
+
+2. 导入需要的组件
+
+   ```jsx
+   import {Link, BrowserRouter, Route} from 'react-router-dom'
+   ```
+
+3. 在<App>组件的最外侧包裹一个<BrowserRouter>或<HashRouter>
+
+4. 导航区用Link标签
+
+   ```jsx
+   <Link to="/xxx">Demo</Link>
+   ```
+
+5. 展示区写Route标签进行路径的匹配
+
+   ```jsx
+   <Route path="/xxx" component={Demo}></Route>
+   ```
+
+### 路由组件与一般组件
+
+| 组件  | 一般组件     | 路由组件                              |
+| ----- | ------------ | ------------------------------------- |
+| 写法  | <Demo/>      | <Route to="/demo" component={Demo} /> |
+| 位置  | components   | pages                                 |
+| props | 写什么传什么 | 固定属性：history 、location、match   |
+
+**路由组件中props的详情**
+
+* history:  go 、goBack 、 goForward 、 push 、 replace
+* location: pathname 、 search 、state
+* match: params、 path 、url
 
 
 
+> **withRouter可以加工一般组件，让一般组件具有路由组件所特有的API**
+
+```jsx
+import {withRouter} from 'react-router-dom'
+export default  withRouter(Demo)
+```
 
 
+
+### NavLink和封装NavLink
+
+> 安装react-router-dom时要用@5版本，不然最新版本NavLink不生效
+
+1. NavLink可以实现路由链接的高亮，通过activeClassName指定样式名，默认是active
+2. 标签体内容是一个特殊的标签属性，通过this.props.children可以获取
+
+**封装NavLink**
+
+```jsx
+import React, {Component} from 'react'
+import { NavLink } from 'react-router-dom'
+export default class MyNavLink extends Component {
+  render () {
+    return (
+      <NavLink activeClassName="selected" className="list-group-item" {...this.props}></NavLink>
+    )
+  }
+}
+```
+
+### Switch的使用
+
+1. 通常情况下，path和component是一一对应的关系。
+2. Switch可以提高路由匹配效率（单一匹配）。
+
+```jsx
+<Switch>
+    <Route path="/about" component={About}></Route>
+    <Route path="/home" component={Home}></Route>
+    <Route path="/home" component={Test}></Route>
+</Switch>
+```
+
+### 路由的严格匹配和模糊匹配
+
+1. 默认使用的是模糊匹配
+2. 利用exact开启严格匹配
+
+```jsx
+< Link to="/home/a/b" /> 
+<Route exact path="home">匹配失败</Route> 
+<Route path="home">匹配成功</Route>
+```
+
+### 向路由组件传递参数
+
+1. params参数
+
+   ```jsx
+   {/* 路由链接（携带参数） */}
+   <Link to='/demo/test/tom/18'}>详情</Link>
+       
+   {/* 注册路由（声明接收） */}
+   <Route path='/demo/test/:name/:age' component={Test}</Link> 
+   
+   {/* 接收参数 */}
+   const {name, age} = this.props.match.params  
+   ```
+
+2. search参数
+
+   ```jsx
+   {/* 路由链接（携带参数） */}
+   <Link to='/demo/test?name=tom&age=18'}>详情</Link>
+       
+   {/* 注册路由（无需声明，正常注册） */}
+   <Route path='/demo/test/' component={Test}</Link> 
+   
+   {/* 接收参数 */}
+   const {search} = this.props.location
+       
+   {/* 备注：获取的search是urlencoded编码字符串，需要借助query-string解析 */}
+   ```
+
+3. state参数
+
+   ```jsx
+   {/* 路由链接（携带参数） */}
+   <Link to={{path: '/demo/test', state: {name:'tom', age:18}}}>详情</Link>
+       
+   {/* 注册路由（无需声明，正常注册） */}
+   <Route path='/demo/test/' component={Test}</Link> 
+   
+   {/* 接收参数 */}
+   const {id, title} = this.props.location.state || {}
+   ```
+
+### 编程式路由导航
+
+借助this.props.history对象上的API操作路由跳转、前进、后退
+
+* this.props.history.push()
+* this.props.history.replace()
+* this.props.history.goBack()
+* this.props.history.goForward()
+* this.props.history.go()
+
+### BrowserRouter和HashRouter
+
+|          | BrowserRouter                        | HashRouter                |
+| -------- | ------------------------------------ | ------------------------- |
+| 底层原理 | 使用H5的history API，不兼容IE9及以下 | 使用URL的哈希值，兼容性好 |
+| path表现 | 没有#                                | 包含#                     |
+| 刷新影响 | 没有影响，state仍在history对象中     | state参数丢失             |
+| 备注     |                                      | 可用于解决路径相关错误    |
+
+
+
+## redux
+
+### redux是什么
+
+1. redux是一个专门用于状态管理的JS库
+2. 它可以用在react、angular、vue等项目中，但基本与react配合使用
+3. 作用：集中式管理react应用中多个组件共享的状态。
+
+### 使用场景
+
+1. 某个组件的状态，需要让其他组件可以随时拿到（共享）。
+2. 一个组件需要改变另一个组件的状态（通信）。
+3. 总体原则：能不用就不用，如果不用比较吃力才考虑使用。
+
+### 工作流程
+
+![react原理图](../images/react原理图.png)
+
+### 核心概念
+
+**action**
+
+* 动作的对象
+* 包含2个属性
+  * type：标识属性，值为字符串，唯一，必要属性
+  * data：数据属性，值为任意类型，可选属性
+* 例子：{type:'ADD_STUDENT', data: {name: 'tom', age: 18}}
+
+**reducer**
+
+* 用于初始化状态、加工状态
+* 加工时，根据旧的state和action，产生新的state的**纯函数**
+
+**store**
+
+* 将state、action、reducer联系在一起的对象
+
+* 得到此对象的方法
+
+  ```jsx
+  import {createStore} from 'redux'
+  import reducer from './reducers'
+  const store = createStore(reducer)
+  ```
+
+* 此对象的功能？
+
+  * getState():得到state
+  * dispatch(action):分发action，触发reducer调用，产生新的state
+  * subscribe(listener):注册监听，当产生新的state时，自动调用
+
+### redux的核心API
+
+**createStore()**
+
+* 创建包含指定reducer的store对象
+
+**store对象**
+
+* redux库最核心的管理对象
+
+* 维护着state 、 reducer
+
+* 核心方法： getState(), dispatch(action), subscribe(listener)
+
+* 具体编码
+
+  ```js
+  store.getState()
+  store.dispatch({type: 'INCREMENT', number})
+  store.subscribe(render)
+  ```
+
+**applyMiddleware()**
+
+* 应用上基于redux的中间件(插件库)
+
+**combineReducers()**
+
+* 作用：合并多个reducer函数
+
+### 异步编程
+
+**理解**
+
+1. redux默认是不能进行异步处理的
+2. 某些时候应用中需要在redux中执行异步任务（ajax,定时器)
+
+**使用异步中间件**
+
+1. 安装redux-thunk插件
+
+   ```shell
+   npm install redux-thunk
+   ```
+
+2. 在store.js中引入并作为createStore的第二个参数传入
+
+   ```js
+   import thunk from 'redux-thunk'
+   const store = createStore(allReducer,applyMiddleware(thunk)))
+   ```
+
+### react-redux
+
+**理解**
+
+1. 一个react插件库
+2. 专门用来简化react应用中使用redux
+
+**react-redux将所有组件分成两大类**
+
+1. UI组件
+   1. 只负责UI的呈现，不带有任何业务逻辑
+   2. 通过porps接收数据（一般数据和函数）
+   3. 不使用任何Redux的API
+   4. 一般保存在components文件夹下
+2. 容器组件
+   1. 负责管理数据和业务逻辑，不负责UI的呈现
+   2. 使用Redux的API
+   3. 一般保存在containers文件夹下
+
+**相关API**
+
+1. Provider：让所有组件都可以得到state数据
+
+   ```jsx
+   <Provider store={store}>
+   	<App/>
+   </Provider>
+   ```
+
+2. connect: 用于包装UI组件生成容器组件
+
+   ```jsx
+   import { connect } from 'react-redux'
+   connect(
+   	mapStateToProps,
+       mapDispatchToProps
+   )(Counter)
+   ```
+
+3. mapStateToProps: 将外部数据转换为UI组件的标签属性
+
+   ```js
+   const mapStateToProps = state => ({key: state.key})
+   ```
+
+4. mapDispatchToProps:将分发action的函数转换为UI组件的标签属性
 
 
 
